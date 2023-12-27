@@ -44,6 +44,6 @@ class HomePageResourceTest extends KernelTestCase
         $this->browser()
             ->actingAs($user)
             ->get("/api/calendar/vacations?dateFrom=20-12-2023&dateTo=25-12-2023",['dateFrom'=>'20-12-2023'])
-            ->dd();
+            ->assertStatus(200);
     }
 }

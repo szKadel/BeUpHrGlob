@@ -52,7 +52,7 @@ class VacationFileObjectTest extends ApiTestCase
 
         $this->browser()
             ->actingAs($user)
-            ->get('/api/vacation_files',[])->dd();
+            ->get('/api/vacation_files',[])->assertStatus(200);
 
 
         $department = DepartmentFactory::createMany(5);
@@ -77,7 +77,7 @@ class VacationFileObjectTest extends ApiTestCase
 
         $this->browser()
             ->actingAs($user)
-            ->get('/api/vacation_files',[])->dd();
+            ->get('/api/vacation_files',[])->assertStatus(200);
 
 
         $this->assertResponseIsSuccessful();
