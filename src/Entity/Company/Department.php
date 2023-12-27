@@ -3,8 +3,10 @@
 namespace App\Entity\Company;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
 use App\Entity\EmployeeExtendedAccesses;
 use App\Repository\DepartmentRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -17,6 +19,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
     operations: [
         new get(normalizationContext: ['groups' => ['departmentOne:read']],security: "is_granted('ROLE_USER')"),
         new GetCollection(normalizationContext: ['groups' => ['department:read']],security: "is_granted('ROLE_USER')"),
+        new Post(normalizationContext: ['groups' => ['department:write']],security: "is_granted('ROLE_ADMIN')"),
+        new Delete(normalizationContext: ['groups' => ['department:delete']],security: "is_granted('ROLE_ADMIN')"),
     ],
     paginationClientItemsPerPage: true,
     paginationItemsPerPage: 7
@@ -26,11 +30,11 @@ class Department
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['department:read','vacationRequest:read'])]
+    #[Groups(['department:read','vacationRequest:read','department:delete'])]
     public ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['department:read','department:write','employee:read','departmentOne:read','vacationRequest:read'])]
+    #[Groups(['department:read','department:write','employee:read','departmentOne:read','vacationRequest:read','department:write','department:delete'])]
     public ?string $name = null;
 
     #[ORM\OneToMany(mappedBy: 'department', targetEntity: Employee::class)]
