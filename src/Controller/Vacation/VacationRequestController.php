@@ -6,8 +6,10 @@ use App\Controller\Notification\EmailNotificationController;
 use App\Entity\Vacation\Vacation;
 use App\Entity\Vacation\VacationLimits;
 use App\Repository\UserRepository;
+use App\Repository\Vacation\Settings\BankHolidayRepository;
 use App\Repository\VacationRepository;
 use App\Service\Vacation\CounterVacationDays;
+use App\Service\WorkingDaysCounterService;
 use DateTime;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
@@ -24,7 +26,8 @@ class VacationRequestController
         private readonly CounterVacationDays $counterVacationDays,
         private readonly EmailNotificationController $emailNotificationController,
         private readonly Security $security,
-        private readonly UserRepository $userRepository
+        private readonly UserRepository $userRepository,
+        private readonly BankHolidayRepository $bankHolidayRepository
     )
     {
     }
@@ -75,6 +78,7 @@ class VacationRequestController
     public function onVacationUpdate(Vacation $vacation, Vacation $previousVacation):void
     {
         $this   ->setVacation($vacation);
+        $this->setSpendVacationDays();
         $this   ->setPreaviusVacation($previousVacation);
         $this   ->checkVacationDaysLimit();
         $this   ->checkReplacement();
@@ -100,6 +104,12 @@ class VacationRequestController
     {
         $this->vacationRepository->findExistingVacationForUserInDateRange($this->vacation->getEmployee(),$this->vacation->getDateFrom(),$this->vacation->getDateTo());
     }
+
+    public function setSpendVacationDays():void
+    {
+        $this->vacation->setSpendVacationDays(WorkingDaysCounterService::countWorkingDays($this->vacation->getDateFrom(),$this->vacation->getDateTo(),$this->bankHolidayRepository));
+    }
+
 
     private function checkVacationStatus():void
     {

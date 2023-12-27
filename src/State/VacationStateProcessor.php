@@ -15,10 +15,12 @@ use App\Entity\Vacation\VacationLimits;
 use App\Repository\EmployeeVacationLimitRepository;
 use App\Repository\Settings\NotificationRepository;
 use App\Repository\UserRepository;
+use App\Repository\Vacation\Settings\BankHolidayRepository;
 use App\Repository\VacationRepository;
 use App\Repository\VacationStatusRepository;
 use App\Service\EmailService;
 use App\Service\Vacation\CounterVacationDays;
+use App\Service\WorkingDaysCounterService;
 use DateTime;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\Attribute\AsDecorator;
@@ -36,7 +38,8 @@ class VacationStateProcessor implements ProcessorInterface
         private UserRepository $userRepository,
         private NotificationRepository $notificationRepository,
         private CounterVacationDays $counterVacationDays,
-        private VacationStatusRepository $vacationStatusRepository
+        private VacationStatusRepository $vacationStatusRepository,
+        private BankHolidayRepository $bankHolidayRepository
     )
     {
 
@@ -154,9 +157,15 @@ class VacationStateProcessor implements ProcessorInterface
                     }
                 }
             }
-
-            $data->setSpendVacationDays();
-
+            if ($data->getDateFrom() != $context["previous_data"]->getDateFrom()) {
+                $data->setSpendVacationDays(
+                    WorkingDaysCounterService::countWorkingDays(
+                        $data->getDateFrom(),
+                        $data->getDateTo(),
+                        $this->bankHolidayRepository
+                    )
+                );
+            }
             if($data->getSpendVacationDays() == 0){
                 throw new BadRequestException('Wniosek nie może być wystawiony na 0 dni.');
             }
