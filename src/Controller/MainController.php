@@ -21,7 +21,7 @@ class MainController extends AbstractController
         return new RedirectResponse('/view/');
     }
 
-    #[Route('/Vacations/YearSummation', methods: ['GET'])]
+    #[Route('/Vacation/YearSummation', methods: ['GET'])]
     public function annualYearSummary(EmployeeRepository $employeeRepository, CounterVacationDays $counterVacationDays, EmployeeVacationLimitRepository $employeeVacationLimitRepository,VacationLimitPresist $vacationLimitPresist, VacationTypesRepository $typesRepository)
     {
         $employees = $employeeRepository -> findAll();
