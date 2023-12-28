@@ -9,9 +9,6 @@ class WorkingDaysCounterService
 {
     public static function countWorkingDays(\DateTimeInterface $fromDate, \DateTimeInterface $toDate, BankHolidayRepository $bankHolidayRepository): int
     {
-
-        $holidays = $bankHolidayRepository->findAll();
-
         if ($fromDate > $toDate) {
             [$fromDate, $toDate] = [$toDate, $fromDate];
         }
@@ -26,7 +23,6 @@ class WorkingDaysCounterService
                 if($holiday == null) {
                     $workingDays++;
                 }
-
             }
             $currentDate->modify('+1 day');
         }
