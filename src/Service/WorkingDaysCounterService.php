@@ -3,7 +3,7 @@
 namespace App\Service;
 
 use App\Repository\Vacation\Settings\BankHolidayRepository;
-use DateTime;
+use DateTimeImmutable;
 
 class WorkingDaysCounterService
 {
@@ -21,7 +21,8 @@ class WorkingDaysCounterService
         $currentDate = clone $fromDate;
         while ($currentDate <= $toDate) {
             if (self::isWorkingDay($currentDate)) {
-                    $holiday = $bankHolidayRepository->findOneBy(['date' => $currentDate]);
+                $dateTimeImmutable = DateTimeImmutable::createFromMutable($currentDate);
+                    $holiday = $bankHolidayRepository->findOneBy(['date' => $dateTimeImmutable]);
                     if($holiday == null) {
                         $workingDays++;
                     }
