@@ -49,6 +49,7 @@ class VacationRequestController
         }
 
         $this -> setVacation($vacation);
+        $this->setSpendVacationDays();
         $this -> checkRights();
         $this -> checkDateAvailability();
         $this -> checkVacationStatus();
@@ -74,7 +75,6 @@ class VacationRequestController
     public function onVacationUpdate(Vacation $vacation, Vacation $previousVacation):void
     {
         $this   ->setVacation($vacation);
-        $this->setSpendVacationDays();
         $this   ->setPreaviusVacation($previousVacation);
         $this   ->checkVacationDaysLimit();
         $this   ->checkReplacement();
