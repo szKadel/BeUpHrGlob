@@ -21,7 +21,7 @@ class WorkingDaysCounterService
         $currentDate = clone $fromDate;
         while ($currentDate <= $toDate) {
             if (self::isWorkingDay($currentDate)) {
-                $dateTimeImmutable = DateTimeImmutable::createFromMutable($currentDate);
+                $dateTimeImmutable = DateTimeImmutable::createFromFormat('Y-m-d', $currentDate->format('Y-m-d'));
                     $holiday = $bankHolidayRepository->findOneBy(['date' => $dateTimeImmutable]);
                     if($holiday == null) {
                         $workingDays++;
