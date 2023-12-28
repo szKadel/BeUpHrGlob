@@ -165,10 +165,9 @@ class VacationStateProcessor implements ProcessorInterface
                         )
                     );
                 }
-
-            }
-            if($data->getSpendVacationDays() == 0){
-                throw new BadRequestException('Wniosek nie może być wystawiony na 0 dni.');
+                if($data->getSpendVacationDays() == 0){
+                    throw new BadRequestException('Wniosek nie może być wystawiony na 0 dni.');
+                }
             }
         }
 
