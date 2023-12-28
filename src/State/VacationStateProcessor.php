@@ -156,15 +156,16 @@ class VacationStateProcessor implements ProcessorInterface
                         $data->setStatus($this->vacationStatusRepository->findByName("Zaplanowany"));
                     }
                 }
-            }
-            if ($data->getDateFrom() != $context["previous_data"]->getDateFrom()) {
-                $data->setSpendVacationDays(
-                    WorkingDaysCounterService::countWorkingDays(
-                        $data->getDateFrom(),
-                        $data->getDateTo(),
-                        $this->bankHolidayRepository
-                    )
-                );
+                if ($data->getDateFrom() != $context["previous_data"]->getDateFrom()) {
+                    $data->setSpendVacationDays(
+                        WorkingDaysCounterService::countWorkingDays(
+                            $data->getDateFrom(),
+                            $data->getDateTo(),
+                            $this->bankHolidayRepository
+                        )
+                    );
+                }
+
             }
             if($data->getSpendVacationDays() == 0){
                 throw new BadRequestException('Wniosek nie może być wystawiony na 0 dni.');
