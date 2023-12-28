@@ -21,7 +21,7 @@ class WorkingDaysCounterService
         $currentDate = clone $fromDate;
         while ($currentDate <= $toDate) {
             if (self::isWorkingDay($currentDate)) {
-                    $holiday = $bankHolidayRepository->findOneBy(['date' => $currentDate->format('Y-m-d')]);
+                    $holiday = $bankHolidayRepository->findOneBy(['date' => $currentDate]);
                     if($holiday == null) {
                         $workingDays++;
                     }
